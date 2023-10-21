@@ -21,4 +21,32 @@
         <coordinates>-118.2437, 34.0522, 6.8</coordinates>
         <magnitude>4.672857142857143</magnitude>
     </earthquake>
+    <earthquake>
+        <id>004</id>
+        <time>17</time>
+        <place>7km West of Mexico City, Mexico</place>
+        <coordinates>-99.1332, 19.4326, 6.0</coordinates>
+        <magnitude>4.285714285714286</magnitude>
+    </earthquake>
+    <earthquake>
+        <id>005</id>
+        <time>9</time>
+        <place>20km South of Rome, Italy</place>
+        <coordinates>12.4964, 41.9028, 5.3</coordinates>
+        <magnitude>3.978571428571429</magnitude>
+    </earthquake>
+    <earthquake>
+        <id>006</id>
+        <time>11</time>
+        <place>2km North of Los Angeles, CA</place>
+        <coordinates>-118.2437, 34.0522, 5.9</coordinates>
+        <magnitude>3.342857142857143</magnitude>
+    </earthquake>
+        <earthquake>
+        <id>007</id>
+        <time>8</time>
+        <place>12km South of Tokyo, Japan</place>
+        <coordinates>139.6917, 35.6895, 6.7</coordinates>
+        <magnitude>4.971428571428571</magnitude>
+    </earthquake>
 </earthquakes>

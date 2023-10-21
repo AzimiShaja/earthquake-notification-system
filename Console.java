@@ -28,6 +28,9 @@ public class Console {
         readFromEarthquakeFile(eFile);
         readFromWatcherFile(wFile);
 
+        System.out.println("======");
+        earthquakeList.print();
+
     }
 
     public static void readFromWatcherFile(String wFile) {
@@ -121,11 +124,14 @@ public class Console {
 
                     System.out.println("Earthquake " + place + " is inserted to the the earthquake-list \n");
 
-                    if (earthquakeList.length() - 1 == 6) {
+                    if (earthquakeList.length() > 5) {
                         earthquakeList.remove();
                     }
+
                 }
+
             }
+
         } catch (Exception e) {
             System.out.println("error while loading");
         }

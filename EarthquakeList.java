@@ -2,6 +2,7 @@ public class EarthquakeList {
 
     private class Node {
         private Earthquake data;
+        private Node prev;
         private Node next;
 
         public Node(Earthquake e) {
@@ -24,8 +25,10 @@ public class EarthquakeList {
             this.tail = newest;
             return;
         }
-        this.tail.next = newest;
-        this.tail = newest;
+        head.prev = null;
+        newest.prev = tail;
+        tail.next = newest;
+        tail = newest;
     }
 
     public int length() {
@@ -38,23 +41,34 @@ public class EarthquakeList {
         return index;
     }
 
-    // public void remove() {
-    // this.head = this.head.next;
-    // }
     public void remove() {
-        if (head == null) {
-            // Handle the case where the list is empty.
-            return;
+        Node prev = null;
+        Node current = this.head;
+        int oldestTime = Integer.MAX_VALUE; // Start with a high value as a placeholder
+
+        while (current != null) {
+            if (current.data.getTime() <= oldestTime) {
+                // If the current earthquake has the same or older time, update the oldestTime
+                oldestTime = current.data.getTime();
+            }
+            current = current.next;
         }
 
-        Node current = head;
+        current = this.head; // Reset the current pointer to the head of the list
 
-        while (current.next != null && current.next.data.getTime() < current.data.getTime()) {
-            // Remove the next earthquake with an older time
-            current.next = current.next.next;
+        while (current != null) {
+            if (current.data.getTime() == oldestTime) {
+                if (prev == null) {
+                    // If the oldest earthquake is at the head of the list
+                    this.head = this.head.next;
+                } else {
+                    prev.next = current.next;
+                }
+            } else {
+                prev = current;
+            }
+            current = current.next;
         }
-
-        head = current; // Update the head to the new head of the list.
     }
 
     public void print() {
