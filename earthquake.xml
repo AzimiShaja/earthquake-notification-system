@@ -2,21 +2,21 @@
 <earthquakes>
     <earthquake>
         <id>001</id>
-        <time>0</time>
+        <time>23</time>
         <place>4km East of San Francisco, CA</place>
         <coordinates>-115.5808, 33.0187, 9.5</coordinates>
         <magnitude>3.971428571428571</magnitude>
     </earthquake>
     <earthquake>
         <id>002</id>
-        <time>1</time>
+        <time>14</time>
         <place>10km North of Tokyo, Japan</place>
         <coordinates>139.6917, 35.6895, 7.2</coordinates>
         <magnitude>5.864285714285714</magnitude>
     </earthquake>
     <earthquake>
         <id>003</id>
-        <time>2</time>
+        <time>5</time>
         <place>15km South of Los Angeles, CA</place>
         <coordinates>-118.2437, 34.0522, 6.8</coordinates>
         <magnitude>4.672857142857143</magnitude>

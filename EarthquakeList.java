@@ -38,8 +38,23 @@ public class EarthquakeList {
         return index;
     }
 
+    // public void remove() {
+    // this.head = this.head.next;
+    // }
     public void remove() {
-        this.head = this.head.next;
+        if (head == null) {
+            // Handle the case where the list is empty.
+            return;
+        }
+
+        Node current = head;
+
+        while (current.next != null && current.next.data.getTime() < current.data.getTime()) {
+            // Remove the next earthquake with an older time
+            current.next = current.next.next;
+        }
+
+        head = current; // Update the head to the new head of the list.
     }
 
     public void print() {

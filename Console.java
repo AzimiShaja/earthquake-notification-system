@@ -119,15 +119,15 @@ public class Console {
                     earthquakeList.add(new Earthquake(Integer.parseInt(id), Integer.parseInt(time), place,
                             coordinates, Double.parseDouble(magnitude)));
 
+                    System.out.println("Earthquake " + place + " is inserted to the the earthquake-list \n");
+
                     if (earthquakeList.length() - 1 == 6) {
                         earthquakeList.remove();
                     }
-
-                    System.out.println("Earthquake " + place + " is inserted to the the earthquake-list \n");
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("error while loading");
         }
     }
 }
