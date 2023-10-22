@@ -1,5 +1,6 @@
 public class WatcherList {
 
+    // Inner class representing a linked list node for Watcher objects
     private class Node {
         private Node next;
         private Node prev;
@@ -27,6 +28,11 @@ public class WatcherList {
         tail = newest;
     }
 
+    /**
+     * Get the length of the linked list.
+     *
+     * @return The number of elements in the linked list.
+     */
     public int length() {
         Node pointer = this.head;
         int index = 0;
@@ -74,5 +80,4 @@ public class WatcherList {
             pointer = pointer.next;
         }
     }
-
 }

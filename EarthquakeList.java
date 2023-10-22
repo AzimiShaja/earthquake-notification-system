@@ -1,5 +1,6 @@
 public class EarthquakeList {
 
+    // Inner class representing a linked list node
     private class Node {
         private Earthquake data;
         private Node prev;
@@ -14,7 +15,7 @@ public class EarthquakeList {
     private Node tail;
 
     public EarthquakeList() {
-        this.head = this.tail = null;
+        this.head = this.tail = null; // Initialize the list with both head and tail set to null.
     }
 
     public void add(Earthquake e) {
@@ -31,6 +32,11 @@ public class EarthquakeList {
         tail = newest;
     }
 
+    /**
+     * Get the length of the linked list.
+     *
+     * @return The number of elements in the linked list.
+     */
     public int length() {
         Node pointer = this.head;
         int index = 0;
@@ -71,15 +77,6 @@ public class EarthquakeList {
         }
     }
 
-    public void print() {
-        Node pointer = head;
-
-        while (pointer != null) {
-            System.out.println(pointer.data);
-            pointer = pointer.next;
-        }
-    }
-
     public Earthquake getLargestEarthquake() {
         if (head == null) {
             return null; // Handle the case where the list is empty.
@@ -97,5 +94,4 @@ public class EarthquakeList {
 
         return largestEarthquake;
     }
-
 }
