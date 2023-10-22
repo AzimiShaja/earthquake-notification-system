@@ -2,24 +2,40 @@ public class EarthquakeList {
 
     // Inner class representing a linked list node
     private class Node {
-        private Earthquake data;
-        private Node prev;
-        private Node next;
+        private Earthquake data; // Data stored in this node (Earthquake object)
+        private Node prev; // Reference to the previous node in the list
+        private Node next; // Reference to the next node in the list
 
         public Node(Earthquake e) {
-            this.data = e;
+            this.data = e; // Constructor to create a new node with Earthquake data
+        }
+
+        public Node getNext() {
+            return next; // Get the next node in the list
+        }
+
+        public Earthquake getData() {
+            return data; // Get the Earthquake data stored in this node
         }
     }
 
-    private Node head;
-    private Node tail;
+    private Node head; // Reference to the first node in the list
+    private Node tail; // Reference to the last node in the list
+
+    public Node getHead() {
+        return head; // Get the reference to the first node in the list
+    }
+
+    public Node getTail() {
+        return tail; // Get the reference to the last node in the list
+    }
 
     public EarthquakeList() {
         this.head = this.tail = null; // Initialize the list with both head and tail set to null.
     }
 
     public void add(Earthquake e) {
-        Node newest = new Node(e);
+        Node newest = new Node(e); // Create a new node with Earthquake data
 
         if (head == null) {
             this.head = newest;
@@ -75,6 +91,51 @@ public class EarthquakeList {
             }
             current = current.next;
         }
+    }
+
+    public void notifyWatcherCloseToEarthquake(EarthquakeList earthquakes, WatcherList watchers) {
+        Node ePointer = earthquakes.getHead();
+        WatcherList.Node wPointer = watchers.getHead();
+
+        while (ePointer != null && wPointer != null) {
+            double watcherLatitude = wPointer.getData().getLatitude();
+            double watcherLongitude = wPointer.getData().getLongitude();
+
+            String[] coordinatesOrder = ePointer.getData().getCoordinates().split(",");
+            double latitude = Double.parseDouble(coordinatesOrder[0]);
+            double longitude = Double.parseDouble(coordinatesOrder[1]);
+
+            double distance = calculateHaversineDistance(watcherLatitude, watcherLongitude, latitude, longitude);
+
+            // Define a threshold distance, e.g., 100 kilometers
+            double thresholdDistance = 100.0;
+
+            if (distance <= thresholdDistance) {
+
+                System.out.println("Earthquake " + ePointer.getData().getPlace() + " is close to "
+                        + wPointer.getClass().getName());
+            }
+
+            ePointer = ePointer.getNext();
+            wPointer = wPointer.getNext();
+        }
+    }
+
+    // Haversine formula to calculate the distance between two points on the Earth's
+    // surface
+    private double calculateHaversineDistance(double lat1, double lon1, double lat2, double lon2) {
+        double earthRadius = 6371; // Radius of the Earth in kilometers
+
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLon = Math.toRadians(lon2 - lon1);
+
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
+                        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        return earthRadius * c; // Distance in kilometers
     }
 
     public Earthquake getLargestEarthquake() {

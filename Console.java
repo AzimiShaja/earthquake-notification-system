@@ -29,6 +29,7 @@ public class Console {
         System.out.println("\n");
         readFromEarthquakeFile(eFile); // Call a method to read and process earthquake records from the provided file.
         readFromWatcherFile(wFile); // Call a method to read and process watcher records from the provided file.
+        earthquakeList.notifyWatcherCloseToEarthquake(earthquakeList, watcherList);
     }
 
     /**
@@ -98,6 +99,7 @@ public class Console {
                     // information.
                     Earthquake largest = earthquakeList.getLargestEarthquake();
                     System.out.println("Magnitude " + largest.getMagnitude() + " at " + largest.getPlace() + "\n");
+
                 }
             }
         } catch (Exception e) {

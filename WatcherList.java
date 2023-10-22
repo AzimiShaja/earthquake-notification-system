@@ -1,7 +1,7 @@
 public class WatcherList {
 
     // Inner class representing a linked list node for Watcher objects
-    private class Node {
+    class Node {
         private Node next;
         private Node prev;
         private Watcher data;
@@ -9,10 +9,46 @@ public class WatcherList {
         public Node(Watcher data) {
             this.data = data;
         }
+
+        public Watcher getData() {
+            return data;
+        }
+
+        public Node getNext() {
+            return next;
+        }
+
+        public Node getPrev() {
+            return prev;
+        }
+
+        public void setNext(Node next) {
+            this.next = next;
+        }
+
+        public void setPrev(Node prev) {
+            this.prev = prev;
+        }
     }
 
     private Node head;
     private Node tail;
+
+    public Node getHead() {
+        return head;
+    }
+
+    public Node getTail() {
+        return tail;
+    }
+
+    public void setHead(Node head) {
+        this.head = head;
+    }
+
+    public void setTail(Node tail) {
+        this.tail = tail;
+    }
 
     public void add(Watcher w) {
         Node newest = new Node(w);
