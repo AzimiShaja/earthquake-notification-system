@@ -94,48 +94,36 @@ public class EarthquakeList {
     }
 
     public void notifyWatcherCloseToEarthquake(EarthquakeList earthquakes, WatcherList watchers) {
-        Node ePointer = earthquakes.getHead();
-        WatcherList.Node wPointer = watchers.getHead();
+        EarthquakeList.Node ePointer = earthquakes.getHead(); // Get the first earthquake node
+        WatcherList.Node wPointer = watchers.getHead(); // Get the first watcher node
 
-        while (ePointer != null && wPointer != null) {
-            double watcherLatitude = wPointer.getData().getLatitude();
-            double watcherLongitude = wPointer.getData().getLongitude();
+        while (ePointer != null && wPointer != null) { // Iterate through earthquakes and watchers
 
-            String[] coordinatesOrder = ePointer.getData().getCoordinates().split(",");
-            double latitude = Double.parseDouble(coordinatesOrder[0]);
-            double longitude = Double.parseDouble(coordinatesOrder[1]);
+            double watcherLatitude = wPointer.getData().getLatitude(); // Get watcher's latitude
+            double watcherLongitude = wPointer.getData().getLongitude(); // Get watcher's longitude
 
-            double distance = calculateHaversineDistance(watcherLatitude, watcherLongitude, latitude, longitude);
+            String[] coordinatesOrder = ePointer.getData().getCoordinates().split(","); // Split earthquake coordinates
+            double latitude = Double.parseDouble(coordinatesOrder[0]); // Get earthquake's latitude
+            double longitude = Double.parseDouble(coordinatesOrder[1]); // Get earthquake's longitude
 
-            // Define a threshold distance, e.g., 100 kilometers
-            double thresholdDistance = 100.0;
+            // Calculate the distance between watcher and earthquake using the distance
+            // formula
+            double distance = Math
+                    .sqrt(Math.pow(watcherLatitude - latitude, 2) + Math.pow(watcherLongitude - longitude, 2));
 
-            if (distance <= thresholdDistance) {
+            // Check if the distance is less than 2 times the cube of earthquake magnitude
+            if (distance < 2 * (Math.pow(ePointer.data.getMagnitude(), 3))) {
 
-                System.out.println("Earthquake " + ePointer.getData().getPlace() + " is close to "
-                        + wPointer.getClass().getName());
+                System.out.println(
+                        "Earthquake " + ePointer.getData().getPlace() + " is close to " +
+                                wPointer.getData().getName()
+                                + "\n");
+
             }
 
-            ePointer = ePointer.getNext();
-            wPointer = wPointer.getNext();
+            ePointer = ePointer.getNext(); // Move to the next earthquake node
+            wPointer = wPointer.getNext(); // Move to the next watcher node
         }
-    }
-
-    // Haversine formula to calculate the distance between two points on the Earth's
-    // surface
-    private double calculateHaversineDistance(double lat1, double lon1, double lat2, double lon2) {
-        double earthRadius = 6371; // Radius of the Earth in kilometers
-
-        double dLat = Math.toRadians(lat2 - lat1);
-        double dLon = Math.toRadians(lon2 - lon1);
-
-        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
-                        Math.sin(dLon / 2) * Math.sin(dLon / 2);
-
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-        return earthRadius * c; // Distance in kilometers
     }
 
     public Earthquake getLargestEarthquake() {

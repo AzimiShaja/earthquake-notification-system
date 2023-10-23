@@ -79,32 +79,23 @@ public class WatcherList {
         return index;
     }
 
-    public void remove(Watcher w) {
+    public void remove(String name) {
         if (head == null) {
             // Handle the case where the list is empty.
             return;
         }
 
-        if (head.data.equals(w)) {
-            // If the target is the head, update the head to the next node.
-            head = head.next;
-            if (head != null) {
-                head.prev = null;
-            }
-            return;
-        }
+        Node pointer = head;
 
-        Node current = head;
-
-        while (current.next != null) {
-            if (current.next.data.equals(w)) {
-                current.next = current.next.next;
-                if (current.next != null) {
-                    current.next.prev = current;
+        while (pointer != null) {
+            if (pointer.data != null && pointer.data.getName() != null && pointer.data.getName().equals(name)) {
+                pointer.prev.next = pointer.next;
+                if (pointer.next != null) {
+                    pointer.next.prev = pointer.prev;
                 }
-                return; // Exit the loop after removing the element.
+                return;
             }
-            current = current.next;
+            pointer = pointer.next;
         }
     }
 

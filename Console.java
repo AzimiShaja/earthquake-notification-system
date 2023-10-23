@@ -1,16 +1,9 @@
 import java.util.Scanner;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import org.xml.sax.InputSource;
-import java.io.StringReader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.io.File;
 
+/*
+*  @author Ahmad Shaja AZIMI - 64220003 
+*/
 public class Console {
 
     private static EarthquakeList earthquakeList = new EarthquakeList(); // Create an instance of EarthquakeList.
@@ -18,17 +11,27 @@ public class Console {
     private static Scanner sc = new Scanner(System.in); // Create a Scanner to read input from the console.
 
     public static void main(String[] args) {
+        // Prompt the user to enter a file path for
+        // earthquake records.
+        System.out.print("Enter the file path for earthquake records: ");
 
-        System.out.print("Enter the file path for earthquake records: "); // Prompt the user to enter a file path for
-                                                                          // earthquake records.
-        String eFile = sc.nextLine(); // Read the user's input as the file path for earthquake records.
+        // Read the user's input as the file path for earthquake records.
+        String eFile = sc.nextLine();
 
-        System.out.print("Enter the file path for watcher records:"); // Prompt the user to enter a file path for
-                                                                      // watcher records.
-        String wFile = sc.nextLine(); // Read the user's input as the file path for watcher records.
+        // Prompt the user to enter a file path for watcher records.
+        System.out.print("Enter the file path for watcher records:");
+
+        String wFile = sc.nextLine(); // Read the user's input as the file path for
+        // watcher records.
         System.out.println("\n");
-        readFromEarthquakeFile(eFile); // Call a method to read and process earthquake records from the provided file.
-        readFromWatcherFile(wFile); // Call a method to read and process watcher records from the provided file.
+
+        readFromEarthquakeFile(eFile); // Call a method to read and process
+        // earthquake records from the provided file.
+
+        readFromWatcherFile(wFile); // Call a method to read and process watcher
+        // records from the provided file.
+
+        // check if there is a earthquake close to watcher
         earthquakeList.notifyWatcherCloseToEarthquake(earthquakeList, watcherList);
     }
 
@@ -78,12 +81,11 @@ public class Console {
                     System.out.println(name + " is added to the watcher-list \n");
 
                 } else if (order[1].equals("delete")) {
-                    int time = Integer.parseInt(order[0]);
-                    String command = order[1];
+
                     String name = order[2];
 
-                    // Remove a Watcher object with the specified data from the list.
-                    watcherList.remove(new Watcher(time, command, name));
+                    // Remove a Watcher object with the specified data from the list.w
+                    watcherList.remove(name);
                     System.out.println(name + " is deleted from the watcher-list \n");
 
                 } else {
@@ -101,6 +103,7 @@ public class Console {
                     System.out.println("Magnitude " + largest.getMagnitude() + " at " + largest.getPlace() + "\n");
 
                 }
+                sc.close();
             }
         } catch (Exception e) {
             // Handle any exceptions that may occur during
@@ -117,51 +120,55 @@ public class Console {
      */
     public static void readFromEarthquakeFile(String eFile) {
         try {
-            // Create a DocumentBuilderFactory to handle XML parsing
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder = factory.newDocumentBuilder();
+            File xmlFile = new File(eFile); // Create a File object for the earthquake file
+            Scanner scanner = new Scanner(xmlFile); // Create a scanner to read the file
 
-            // Read the XML data from the specified file into a String
-            String xmlData = new String(Files.readAllBytes(Paths.get(eFile)));
+            String id = "";
+            String time = "";
+            String place = "";
+            String coordinates = "";
+            String magnitude = "";
 
-            // Create an InputSource from the XML data
-            InputSource inputSource = new InputSource(new StringReader(xmlData));
+            while (scanner.hasNextLine()) { // Read the file line by line
+                String line = scanner.nextLine();
 
-            // Parse the XML data to create a Document
-            Document document = builder.parse(inputSource);
+                if (line.contains("<id>")) {
+                    id = line.replaceAll("<id>|</id>", "").trim(); // Extract and store the earthquake ID
+                } else if (line.contains("<time>")) {
+                    time = line.replaceAll("<time>|</time>", "").trim(); // Extract and store the earthquake time
+                } else if (line.contains("<place>")) {
+                    place = line.replaceAll("<place>|</place>", "").trim(); // Extract and store the earthquake place
+                } else if (line.contains("<coordinates>")) {
+                    coordinates = line.replaceAll("<coordinates>|</coordinates>", "").trim(); // Extract and store the
+                                                                                              // earthquake coordinates
+                } else if (line.contains("<magnitude>")) {
+                    magnitude = line.replaceAll("<magnitude>|</magnitude>", "").trim(); // Extract and store the
+                                                                                        // earthquake magnitude
+                }
 
-            // Get a NodeList of 'earthquake' elements from the parsed document
-            NodeList earthquakeNodes = document.getElementsByTagName("earthquake");
-
-            // Iterate through the 'earthquake' elements
-            for (int i = 0; i < earthquakeNodes.getLength(); i++) {
-                Node earthquakeNode = earthquakeNodes.item(i);
-                if (earthquakeNode.getNodeType() == Node.ELEMENT_NODE) {
-                    Element earthquakeElement = (Element) earthquakeNode;
-
-                    // Extract data from the 'earthquake' element
-                    String id = earthquakeElement.getElementsByTagName("id").item(0).getTextContent().trim();
-                    String time = earthquakeElement.getElementsByTagName("time").item(0).getTextContent().trim();
-                    String place = earthquakeElement.getElementsByTagName("place").item(0).getTextContent().trim();
-                    String coordinates = earthquakeElement.getElementsByTagName("coordinates").item(0).getTextContent()
-                            .trim();
-                    String magnitude = earthquakeElement.getElementsByTagName("magnitude").item(0).getTextContent()
-                            .trim();
-
-                    // Create an Earthquake object and add it to the EarthquakeList
-                    earthquakeList.add(new Earthquake(Integer.parseInt(id), Integer.parseInt(time), place,
-                            coordinates, Double.parseDouble(magnitude)));
+                if (line.contains("</earthquake>")) {
+                    // Create a new Earthquake object and add it to the earthquakeList
+                    earthquakeList.add(new Earthquake(Integer.parseInt(id), Integer.parseInt(time), place, coordinates,
+                            Double.parseDouble(magnitude)));
 
                     System.out.println("Earthquake " + place + " is inserted into the earthquake-list \n");
 
-                    // Ensure that the EarthquakeList does not exceed a certain length (e.g., 5)
+                    // Check if there are more than 5 elements and remove the earthquake with the
+                    // oldest time
                     if (earthquakeList.length() > 5) {
                         earthquakeList.remove();
                     }
+                    // Clear the variables for the next entry.
+                    id = "";
+                    time = "";
+                    place = "";
+                    coordinates = "";
+                    magnitude = "";
                 }
             }
+            scanner.close(); // Close the scanner when done
         } catch (Exception e) {
-            System.out.println("Error while loading earthquake data from file");
+            e.printStackTrace(); // Handle any exceptions and print the stack trace
         }
     }
 }

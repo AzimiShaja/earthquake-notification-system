@@ -1,10 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<earthquakes>
     <earthquake>
         <id>001</id>
         <time>23</time>
         <place>4km East of San Francisco, CA</place>
-        <coordinates>-115.5808, 33.0187, 9.5</coordinates>
+        <coordinates>-115.5808, 33.0187</coordinates>
         <magnitude>3.971428571428571</magnitude>
     </earthquake>
     <earthquake>
@@ -42,11 +40,10 @@
         <coordinates>-118.2437, 34.0522, 5.9</coordinates>
         <magnitude>3.342857142857143</magnitude>
     </earthquake>
-        <earthquake>
+    <earthquake>
         <id>007</id>
         <time>8</time>
         <place>12km South of Tokyo, Japan</place>
         <coordinates>139.6917, 35.6895, 6.7</coordinates>
         <magnitude>4.971428571428571</magnitude>
     </earthquake>
-</earthquakes>
