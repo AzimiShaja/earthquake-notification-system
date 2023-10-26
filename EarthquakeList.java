@@ -64,32 +64,38 @@ public class EarthquakeList {
     }
 
     public void remove() {
-        Node prev = null;
-        Node current = this.head;
-        int oldestTime = Integer.MAX_VALUE; // Start with a high value as a placeholder
+        if (head == null) {
+            // Handle the case where the list is empty
+            return;
+        }
+
+        Node oldestNode = head;
+        Node current = head.next;
 
         while (current != null) {
-            if (current.data.getTime() <= oldestTime) {
-                // If the current earthquake has the same or older time, update the oldestTime
-                oldestTime = current.data.getTime();
+            if (current.data.getTime() < oldestNode.data.getTime()) {
+                oldestNode = current;
             }
             current = current.next;
         }
 
-        current = this.head; // Reset the current pointer to the head of the list
+        // At this point, oldestNode should point to the oldest earthquake in the list.
+        // Now, remove it from the list.
 
-        while (current != null) {
-            if (current.data.getTime() == oldestTime) {
-                if (prev == null) {
-                    // If the oldest earthquake is at the head of the list
-                    this.head = this.head.next;
-                } else {
-                    prev.next = current.next;
-                }
-            } else {
-                prev = current;
+        if (oldestNode == head) {
+            // If the oldest earthquake is the first node (head), update head to the next
+            // node.
+            head = head.next;
+            if (head != null) {
+                head.prev = null;
             }
-            current = current.next;
+        } else {
+            // If the oldest earthquake is not the first node, update the next and prev
+            // pointers to bypass it.
+            oldestNode.prev.next = oldestNode.next;
+            if (oldestNode.next != null) {
+                oldestNode.next.prev = oldestNode.prev;
+            }
         }
     }
 
@@ -142,5 +148,14 @@ public class EarthquakeList {
         }
 
         return largestEarthquake;
+    }
+
+    public void print() {
+        Node pointer = head;
+
+        while (pointer != null) {
+            System.out.print(pointer.data);
+            pointer = pointer.next;
+        }
     }
 }

@@ -11,28 +11,26 @@ public class Console {
     private static Scanner sc = new Scanner(System.in); // Create a Scanner to read input from the console.
 
     public static void main(String[] args) {
-        // Prompt the user to enter a file path for
-        // earthquake records.
+
         System.out.print("Enter the file path for earthquake records: ");
 
         // Read the user's input as the file path for earthquake records.
         String eFile = sc.nextLine();
 
-        // Prompt the user to enter a file path for watcher records.
         System.out.print("Enter the file path for watcher records:");
 
-        String wFile = sc.nextLine(); // Read the user's input as the file path for
-        // watcher records.
+        String wFile = sc.nextLine(); // Read the user's input as the file path for watcher records.
         System.out.println("\n");
 
-        readFromEarthquakeFile(eFile); // Call a method to read and process
-        // earthquake records from the provided file.
+        readFromEarthquakeFile(eFile); // Call a method to read and process earthquake records from the provided file.
 
         readFromWatcherFile(wFile); // Call a method to read and process watcher
+
         // records from the provided file.
 
         // check if there is a earthquake close to watcher
         earthquakeList.notifyWatcherCloseToEarthquake(earthquakeList, watcherList);
+
     }
 
     /**
@@ -56,8 +54,6 @@ public class Console {
             }
 
         } catch (Exception e) {
-            // Handle any exceptions that may occur during file
-            // handling.
             System.err.println("Error While reading file " + wFile);
         }
 
@@ -88,23 +84,24 @@ public class Console {
                     watcherList.remove(name);
                     System.out.println(name + " is deleted from the watcher-list \n");
 
-                } else {
-                    int time = Integer.parseInt(order[0]);
-                    String command = order[1];
-
+                } else if (order[1].equals("query-largest")) {
                     // Create a new Watcher object with the parsed data and add it to a list.
-                    watcherList.add(new Watcher(time, command));
-
-                    System.out.println("Largest earthquake in the past 6 hours:");
-
-                    // Get the largest earthquake from an earthquake list and display its
-                    // information.
                     Earthquake largest = earthquakeList.getLargestEarthquake();
-                    System.out.println("Magnitude " + largest.getMagnitude() + " at " + largest.getPlace() + "\n");
+                    if (largest != null) {
+                        System.out.println("Largest earthquake in the past 6 hours:\n");
+
+                        // Get the largest earthquake from an earthquake list and display its
+                        // information.
+
+                        System.out.println("Magnitude " + largest.getMagnitude() + " at " +
+                                largest.getPlace() + "\n");
+                    } else {
+                        System.out.println("No record found");
+                    }
 
                 }
-                sc.close();
             }
+            inputStream.close();
         } catch (Exception e) {
             // Handle any exceptions that may occur during
             // data parsing.
@@ -132,32 +129,31 @@ public class Console {
             while (scanner.hasNextLine()) { // Read the file line by line
                 String line = scanner.nextLine();
 
+                // Extract data from earthquake file using replaceAll method + trim
                 if (line.contains("<id>")) {
-                    id = line.replaceAll("<id>|</id>", "").trim(); // Extract and store the earthquake ID
+                    id = line.replaceAll("<id>|</id>", "").trim();
+
                 } else if (line.contains("<time>")) {
-                    time = line.replaceAll("<time>|</time>", "").trim(); // Extract and store the earthquake time
+                    time = line.replaceAll("<time>|</time>", "").trim();
+
                 } else if (line.contains("<place>")) {
-                    place = line.replaceAll("<place>|</place>", "").trim(); // Extract and store the earthquake place
+                    place = line.replaceAll("<place>|</place>", "").trim();
+
                 } else if (line.contains("<coordinates>")) {
-                    coordinates = line.replaceAll("<coordinates>|</coordinates>", "").trim(); // Extract and store the
-                                                                                              // earthquake coordinates
+                    coordinates = line.replaceAll("<coordinates>|</coordinates>", "").trim();
+
                 } else if (line.contains("<magnitude>")) {
-                    magnitude = line.replaceAll("<magnitude>|</magnitude>", "").trim(); // Extract and store the
-                                                                                        // earthquake magnitude
+                    magnitude = line.replaceAll("<magnitude>|</magnitude>", "").trim();
+
                 }
 
-                if (line.contains("</earthquake>")) {
+                if (line.contains("</earthquake>")) { // end of a tag
                     // Create a new Earthquake object and add it to the earthquakeList
                     earthquakeList.add(new Earthquake(Integer.parseInt(id), Integer.parseInt(time), place, coordinates,
                             Double.parseDouble(magnitude)));
 
                     System.out.println("Earthquake " + place + " is inserted into the earthquake-list \n");
 
-                    // Check if there are more than 5 elements and remove the earthquake with the
-                    // oldest time
-                    if (earthquakeList.length() > 5) {
-                        earthquakeList.remove();
-                    }
                     // Clear the variables for the next entry.
                     id = "";
                     time = "";
@@ -165,10 +161,16 @@ public class Console {
                     coordinates = "";
                     magnitude = "";
                 }
+
+                // Check if there are more than 5 elements and remove the earthquake with
+                // oldesttime
+                if (earthquakeList.length() == 7) {
+                    earthquakeList.remove();
+                }
             }
             scanner.close(); // Close the scanner when done
         } catch (Exception e) {
-            e.printStackTrace(); // Handle any exceptions and print the stack trace
+            System.out.println("Error while storing data");
         }
     }
 }
