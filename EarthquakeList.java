@@ -69,34 +69,10 @@ public class EarthquakeList {
             return;
         }
 
-        Node oldestNode = head;
-        Node current = head.next;
+        this.head = this.head.next;
+        this.head.next.prev = head;
+        this.head.prev = null;
 
-        while (current != null) {
-            if (current.data.getTime() < oldestNode.data.getTime()) {
-                oldestNode = current;
-            }
-            current = current.next;
-        }
-
-        // At this point, oldestNode should point to the oldest earthquake in the list.
-        // Now, remove it from the list.
-
-        if (oldestNode == head) {
-            // If the oldest earthquake is the first node (head), update head to the next
-            // node.
-            head = head.next;
-            if (head != null) {
-                head.prev = null;
-            }
-        } else {
-            // If the oldest earthquake is not the first node, update the next and prev
-            // pointers to bypass it.
-            oldestNode.prev.next = oldestNode.next;
-            if (oldestNode.next != null) {
-                oldestNode.next.prev = oldestNode.prev;
-            }
-        }
     }
 
     public void notifyWatcherCloseToEarthquake(EarthquakeList earthquakes, WatcherList watchers) {
@@ -122,8 +98,7 @@ public class EarthquakeList {
 
                 System.out.println(
                         "Earthquake " + ePointer.getData().getPlace() + " is close to " +
-                                wPointer.getData().getName()
-                                + "\n");
+                                wPointer.getData().getName() + "\n");
 
             }
 

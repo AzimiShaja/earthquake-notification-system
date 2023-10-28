@@ -11,166 +11,129 @@ public class Console {
     private static Scanner sc = new Scanner(System.in); // Create a Scanner to read input from the console.
 
     public static void main(String[] args) {
-
-        System.out.print("Enter the file path for earthquake records: ");
-
-        // Read the user's input as the file path for earthquake records.
-        String eFile = sc.nextLine();
-
-        System.out.print("Enter the file path for watcher records:");
-
-        String wFile = sc.nextLine(); // Read the user's input as the file path for watcher records.
+        // System.out.print("Enter the file path for earthquake records: ");
+        // String eFile = sc.nextLine();
+        // System.out.print("Enter the file path for watcher records:");
+        // String wFile = sc.nextLine();
         System.out.println("\n");
 
-        readFromEarthquakeFile(eFile); // Call a method to read and process earthquake records from the provided file.
-
-        readFromWatcherFile(wFile); // Call a method to read and process watcher
-
-        // records from the provided file.
-
-        // check if there is a earthquake close to watcher
-        earthquakeList.notifyWatcherCloseToEarthquake(earthquakeList, watcherList);
-
-    }
-
-    /**
-     * Reads data from a file, parses the content, and performs actions based on the
-     * data.
-     * The file is expected to have lines in a specific format, with commands like
-     * 'add', 'delete',
-     * or other actions, and this method processes these commands accordingly.
-     *
-     * @param wFile The file path to read data from.
-     */
-    public static void readFromWatcherFile(String wFile) {
-        Scanner inputStream = null; // Declare a Scanner to read from the input file.
         try {
-            File file = new File(wFile); // Create a File object from the provided file path.
+            File watcherFile = new File("watcher.txt");
+            Scanner inputStream1 = new Scanner(watcherFile);
+            File earthquakeFile = new File("earthquake.txt");
+            Scanner inputStream2 = new Scanner(earthquakeFile);
 
-            if (file.exists()) {
-                inputStream = new Scanner(file); // If the file exists, initialize the Scanner to read from it.
-            } else {
-                System.out.println("File not found;"); // Print an error message if the file doesn't exist.
-            }
+            int myTime = 0;
+            int eTime = 0;
+            int wTime = 0;
 
-        } catch (Exception e) {
-            System.err.println("Error While reading file " + wFile);
-        }
+            while (inputStream1.hasNextLine() || inputStream2.hasNextLine()) {
 
-        try {
-            while (inputStream.hasNextLine()) {
-                // Read the next line from the file.
-                String line = inputStream.nextLine();
+                processWatcherLine(wTime, myTime, inputStream1);
+                processEarthquakeLine(eTime, myTime, inputStream2);
 
-                // Split the line into an array based on space (' ') as a delimiter.
-                String[] order = line.split(" ");
-
-                if (order[1].equals("add")) {
-                    int time = Integer.parseInt(order[0]);
-                    String command = order[1];
-                    double latitude = Double.parseDouble(order[2]);
-                    double longitude = Double.parseDouble(order[3]);
-                    String name = order[4];
-
-                    // Create a new Watcher object with the parsed data and add it to a list.
-                    watcherList.add(new Watcher(time, command, latitude, longitude, name));
-                    System.out.println(name + " is added to the watcher-list \n");
-
-                } else if (order[1].equals("delete")) {
-
-                    String name = order[2];
-
-                    // Remove a Watcher object with the specified data from the list.w
-                    watcherList.remove(name);
-                    System.out.println(name + " is deleted from the watcher-list \n");
-
-                } else if (order[1].equals("query-largest")) {
-                    // Create a new Watcher object with the parsed data and add it to a list.
-                    Earthquake largest = earthquakeList.getLargestEarthquake();
-                    if (largest != null) {
-                        System.out.println("Largest earthquake in the past 6 hours:\n");
-
-                        // Get the largest earthquake from an earthquake list and display its
-                        // information.
-
-                        System.out.println("Magnitude " + largest.getMagnitude() + " at " +
-                                largest.getPlace() + "\n");
-                    } else {
-                        System.out.println("No record found");
-                    }
-
-                }
-            }
-            inputStream.close();
-        } catch (Exception e) {
-            // Handle any exceptions that may occur during
-            // data parsing.
-            System.err.println("Error while parsing data from file");
-        }
-    }
-
-    /**
-     * Reads earthquake data from an XML file, parses the content, and adds it to an
-     * EarthquakeList.
-     *
-     * @param eFile The file path to read earthquake data from.
-     */
-    public static void readFromEarthquakeFile(String eFile) {
-        try {
-            File xmlFile = new File(eFile); // Create a File object for the earthquake file
-            Scanner scanner = new Scanner(xmlFile); // Create a scanner to read the file
-
-            String id = "";
-            String time = "";
-            String place = "";
-            String coordinates = "";
-            String magnitude = "";
-
-            while (scanner.hasNextLine()) { // Read the file line by line
-                String line = scanner.nextLine();
-
-                // Extract data from earthquake file using replaceAll method + trim
-                if (line.contains("<id>")) {
-                    id = line.replaceAll("<id>|</id>", "").trim();
-
-                } else if (line.contains("<time>")) {
-                    time = line.replaceAll("<time>|</time>", "").trim();
-
-                } else if (line.contains("<place>")) {
-                    place = line.replaceAll("<place>|</place>", "").trim();
-
-                } else if (line.contains("<coordinates>")) {
-                    coordinates = line.replaceAll("<coordinates>|</coordinates>", "").trim();
-
-                } else if (line.contains("<magnitude>")) {
-                    magnitude = line.replaceAll("<magnitude>|</magnitude>", "").trim();
-
-                }
-
-                if (line.contains("</earthquake>")) { // end of a tag
-                    // Create a new Earthquake object and add it to the earthquakeList
-                    earthquakeList.add(new Earthquake(Integer.parseInt(id), Integer.parseInt(time), place, coordinates,
-                            Double.parseDouble(magnitude)));
-
-                    System.out.println("Earthquake " + place + " is inserted into the earthquake-list \n");
-
-                    // Clear the variables for the next entry.
-                    id = "";
-                    time = "";
-                    place = "";
-                    coordinates = "";
-                    magnitude = "";
-                }
-
-                // Check if there are more than 5 elements and remove the earthquake with
-                // oldesttime
                 if (earthquakeList.length() == 7) {
                     earthquakeList.remove();
                 }
+                if (earthquakeList != null && watcherList != null) {
+                    earthquakeList.notifyWatcherCloseToEarthquake(earthquakeList, watcherList);
+
+                }
+
             }
-            scanner.close(); // Close the scanner when done
+
+            inputStream1.close();
+            inputStream2.close();
+            System.out.println("\n\n");
+
         } catch (Exception e) {
-            System.out.println("Error while storing data");
+            System.out.println("Exception occurred: " + e.getMessage());
+
+        }
+
+        sc.close(); // Close scanner
+        System.out.println("\n");
+    }
+
+    public static void processWatcherLine(int wTime, int myTime, Scanner inputStream1) {
+        while (wTime == myTime && inputStream1.hasNextLine()) {
+            String wLine = inputStream1.nextLine();
+            String[] order = wLine.split(" ");
+
+            if (wLine.contains("add")) {
+                wTime = Integer.parseInt(order[0]);
+                String command = order[1];
+                Double latitude = Double.parseDouble(order[2]);
+                Double longitude = Double.parseDouble(order[3]);
+                String name = order[4];
+
+                watcherList.add(new Watcher(wTime, command, latitude, longitude, name));
+                System.out.println(name + " is added to the watcher list \n");
+            } else if (wLine.contains("delete")) {
+                String name = order[2];
+                wTime = Integer.parseInt(order[0]);
+                watcherList.remove(name);
+                System.out.println(name + " is removed from the watcher list \n");
+            } else {
+                wTime = Integer.parseInt(order[0]);
+                Earthquake largest = earthquakeList.getLargestEarthquake();
+
+                if (largest != null) {
+                    System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+                    System.out.println("Largest earthquake in the past 6 hours:");
+                    System.out.println(
+                            "Magnitude " + largest.getMagnitude() + " at " + largest.getPlace() + "");
+                    System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n");
+                } else {
+                    System.out.println("No record found \n");
+                }
+            }
+            myTime++;
+        }
+    }
+
+    public static void processEarthquakeLine(int eTime, int myTime, Scanner inputStream2) {
+        String place = "";
+        String coordinates = "";
+        String magnitude = "";
+        String id = " ";
+
+        while (inputStream2.hasNextLine()) {
+            String eLine = inputStream2.nextLine();
+
+            if (eLine.contains("<id>")) {
+                id = eLine.replaceAll("<id>|</id>", "").trim();
+                // Process the other fields related to an earthquake within this block
+            }
+            if (eLine.contains("<time>")) {
+                eTime = Integer.parseInt(eLine.replaceAll("<time>|</time>", "").trim());
+            } else if (eLine.contains("<place>")) {
+                place = eLine.replaceAll("<place>|</place>", "").trim();
+            } else if (eLine.contains("<coordinates>")) {
+                coordinates = eLine.replaceAll("<coordinates>|</coordinates>", "").trim();
+            } else if (eLine.contains("<magnitude>")) {
+                magnitude = eLine.replaceAll("<magnitude>|</magnitude>", "").trim();
+            }
+
+            if (eLine.contains("</earthquake>")) { // end of a tag
+                // Create a new Earthquake object and add it to the earthquakeList
+                earthquakeList.add(new Earthquake(Integer.parseInt(id), eTime, place,
+                        coordinates,
+                        Double.parseDouble(magnitude)));
+                System.out.println("Earthquake " + place + " is inserted into the earthquake list\n");
+                myTime++;
+
+                // Clear the variables for the next entry.
+                id = "";
+                place = "";
+                coordinates = "";
+                magnitude = "";
+
+                if (myTime != eTime) {
+                    break;
+                }
+            }
+
         }
     }
 }
