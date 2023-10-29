@@ -69,9 +69,11 @@ public class EarthquakeList {
             return;
         }
 
-        this.head = this.head.next;
-        this.head.next.prev = head;
-        this.head.prev = null;
+        head = head.next;
+        if (head != null) {
+            head.prev = null;
+
+        }
 
     }
 
@@ -91,7 +93,7 @@ public class EarthquakeList {
             // Calculate the distance between watcher and earthquake using the distance
             // formula
             double distance = Math
-                    .sqrt(Math.pow(watcherLatitude - latitude, 2) + Math.pow(watcherLongitude - longitude, 2));
+                    .sqrt(Math.pow(latitude - watcherLatitude, 2) + Math.pow(longitude - watcherLongitude, 2));
 
             // Check if the distance is less than 2 times the cube of earthquake magnitude
             if (distance < 2 * (Math.pow(ePointer.data.getMagnitude(), 3))) {
