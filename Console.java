@@ -25,10 +25,10 @@ public class Console {
 
         int myTime = 0; // Current fictional time initialization
 
-        while (j < eTemp.size() && i < wTemp.size()) {
+        int eTime = eTemp.get(j).getTime();
+        int wTime = wTemp.get(i).getTime();
 
-            int eTime = eTemp.get(j).getTime();
-            int wTime = wTemp.get(i).getTime();
+        while (i < wTemp.size() || j < eTemp.size()) {
 
             while (myTime == wTime && i < wTemp.size()) {
                 // Process actions for Watchers
@@ -73,7 +73,6 @@ public class Console {
                 if (j < eTemp.size()) {
                     eTime = eTemp.get(j).getTime(); // Update eTime with the new value
                 }
-
             }
 
             if (eTime - myTime >= 6) {
@@ -84,8 +83,6 @@ public class Console {
             // Thread.sleep(1000); // Not currently active, potential thread sleep
             myTime++; // Increment time
         }
-        earthquakeList.add(eTemp.get(j)); // Add earthquake to the list
-        System.out.println("Earthquake " + eTemp.get(j).getPlace() + " is inserted to earthquake-list\n");
 
         // Clear the temporary lists
         eTemp.clear();
@@ -139,7 +136,7 @@ public class Console {
 
     // Method to read data from the earthquake file
     private static void readFromEarthquake() {
-        System.out.println("Please enter the filepath for earthquake: ");
+        System.out.print("Please enter the filepath for earthquake: ");
         String filepath = sc.nextLine();
         try {
             File file2 = new File(filepath);

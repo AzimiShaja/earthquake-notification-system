@@ -101,13 +101,4 @@ public class WatcherList {
             pointer = pointer.next;
         }
     }
-
-    public void print() {
-        Node pointer = head;
-
-        while (pointer != null) {
-            System.out.print(pointer.data);
-            pointer = pointer.next;
-        }
-    }
 }

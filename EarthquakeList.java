@@ -126,13 +126,4 @@ public class EarthquakeList {
 
         return largestEarthquake;
     }
-
-    public void print() {
-        Node pointer = head;
-
-        while (pointer != null) {
-            System.out.print(pointer.data);
-            pointer = pointer.next;
-        }
-    }
 }
