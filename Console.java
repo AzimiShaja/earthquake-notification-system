@@ -2,9 +2,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-/**
- * Driver
- */
 public class Console {
 
     private static ArrayList<Earthquake> eTemp = new ArrayList<>();
@@ -18,23 +15,22 @@ public class Console {
         readFromEarthquake();
 
         System.out.println("\n");
-
-        int i = 0;
         int j = 0;
+        int i = 0;
 
         int myTime = 0;
 
-        while ((i < wTemp.size() && j < eTemp.size())) {
-            System.out.println("=====  Time " + myTime + " ============");
+        while (j < eTemp.size() && i < wTemp.size()) {
+            System.out.println("Time " + myTime);
 
-            int wTime = wTemp.get(i).getTime();
             int eTime = eTemp.get(j).getTime();
+            int wTime = wTemp.get(i).getTime();
 
             while (myTime == wTime && i < wTemp.size()) {
 
                 if (wTemp.get(i).getCommand().equals("add")) {
                     watcherList.add(wTemp.get(i));
-                    System.out.println(wTemp.get(i).getName() + " is added to watcher List\n");
+                    System.out.println("Earthquake " + wTemp.get(i).getName() + " is added to watcher List");
 
                 } else if (wTemp.get(i).getCommand().equals("delete")) {
 
@@ -66,14 +62,12 @@ public class Console {
 
                 earthquakeList.notifyWatcherCloseToEarthquake(earthquakeList, watcherList);
 
-                if (myTime - eTemp.get(j + 1).getTime() >= 6) {
-                    earthquakeList.remove(); // Remove the earthquake
-                    System.out.println("Earthquake removed after 6 hours");
-                }
-
                 j++;
                 if (j < eTemp.size()) {
                     eTime = eTemp.get(j).getTime(); // Update eTime with the new value
+                }
+                if (eTime - myTime >= 6) {
+                    earthquakeList.remove(); // Remove the earthquake
                 }
             }
 
@@ -81,8 +75,9 @@ public class Console {
             myTime++;
         }
 
-        wTemp.clear();
+        // clear the temporary lists
         eTemp.clear();
+        wTemp.clear();
 
     }
 

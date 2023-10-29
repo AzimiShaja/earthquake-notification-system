@@ -13,7 +13,6 @@
 19 add 18.071575 53.088710 Pong
 21 delete Carol
 23 query-largest
-23 query-largest
 26 query-largest
 28 delete Gale
 29 delete Tom
