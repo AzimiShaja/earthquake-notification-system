@@ -1,57 +1,71 @@
+
+/**
+ * The Console class manages Earthquake and Watcher data from input files.
+ *
+ * It reads data from 'watcher.txt' and 'earthquake.txt' files, processes the information, and performs actions based on specific commands from the input.
+ * This class uses EarthquakeList and WatcherList to maintain the respective data.
+ * 
+ * @author Ahmad Shaja AZIMI - 64220003
+ */
 import java.io.File; // Import File class to handle file operations
 import java.util.ArrayList; // Import ArrayList for dynamic array handling
 import java.util.Scanner; // Import Scanner to read input
 
-/* 
- * @author Ahmad Shaja AZIMI - 64220003
- */
-
 public class Console {
 
-    private static ArrayList<Earthquake> eTemp = new ArrayList<>(); // Temporary list for Earthquakes
-    private static ArrayList<Watcher> wTemp = new ArrayList<>(); // Temporary list for Watchers
-    private static Scanner sc = new Scanner(System.in);
+    // Temporary lists for Earthquakes and Watchers
+    private static ArrayList<Earthquake> eTemp = new ArrayList<>();
+    private static ArrayList<Watcher> wTemp = new ArrayList<>();
+    private static Scanner sc = new Scanner(System.in); // Scanner to read input
 
-    private static EarthquakeList earthquakeList = new EarthquakeList(); // List to hold Earthquake data
-    private static WatcherList watcherList = new WatcherList(); // List to hold Watcher data
+    // Lists to hold Earthquake and Watcher data
+    private static EarthquakeList earthquakeList = new EarthquakeList();
+    private static WatcherList watcherList = new WatcherList();
 
+    /**
+     * The main method processes Watcher and Earthquake data, performs actions based
+     * on input, and manages temporal time.
+     *
+     * @param args command-line arguments
+     * @throws InterruptedException if a thread is interrupted
+     */
     public static void main(String[] args) throws InterruptedException {
         readFromWatcher(); // Reads data from watcher.txt
         readFromEarthquake(); // Reads data from earthquake.txt
 
-        System.out.println("\n");
+        // Current fictional time initialization
         int j = 0;
         int i = 0;
-
-        int myTime = 0; // Current fictional time initialization
+        int k = 0;
 
         int eTime = eTemp.get(j).getTime();
         int wTime = wTemp.get(i).getTime();
 
+        // Loop until all data from Watchers or Earthquakes is processed
         while (i < wTemp.size() || j < eTemp.size()) {
+            System.out.println("+=========== " + k + " ===========+");
 
-            while (myTime == wTime && i < wTemp.size()) {
-                // Process actions for Watchers
-
+            // Process actions for Watchers
+            while (k == wTime && i < wTemp.size()) {
                 if (wTemp.get(i).getCommand().equals("add")) {
-                    watcherList.add(wTemp.get(i)); // Add watcher to the list
+                    // Add watcher to the list
+                    watcherList.add(wTemp.get(i));
                     System.out.println(wTemp.get(i).getName() + " is added to watcher List\n");
 
                 } else if (wTemp.get(i).getCommand().equals("delete")) {
+                    // Remove watcher from the list
                     String name = wTemp.get(i).getName();
-                    watcherList.remove(name); // Remove watcher from the list
+                    watcherList.remove(name);
                     System.out.println(name + " is deleted from list\n");
 
                 } else {
                     // Process action when the command is neither 'add' nor 'delete'
-
                     Earthquake largest = earthquakeList.getLargestEarthquake(); // Retrieve the largest earthquake
 
                     if (largest != null) {
                         // Display information about the largest earthquake in the past 6 hours
                         System.out.println("Largest earthquake in the past 6 hours:");
-                        System.out.println(
-                                "Magnitude " + largest.getMagnitude() + " at " + largest.getPlace() + "\n");
+                        System.out.println("Magnitude " + largest.getMagnitude() + " at " + largest.getPlace() + "\n");
                     } else {
                         System.out.println("No record found \n"); // Display if no earthquake record is found
                     }
@@ -63,34 +77,36 @@ public class Console {
             }
 
             // Process Earthquake actions
-            while (myTime == eTime && j < eTemp.size()) {
-                earthquakeList.add(eTemp.get(j)); // Add earthquake to the list
+            while (k == eTime && j < eTemp.size()) {
+                // Add earthquake to the list
+                earthquakeList.add(eTemp.get(j));
                 System.out.println("Earthquake " + eTemp.get(j).getPlace() + " is inserted to earthquake-list\n");
 
-                earthquakeList.notifyWatcherCloseToEarthquake(earthquakeList, watcherList); // Notify watchers
-
+                // Notify watchers close to the earthquake
+                earthquakeList.notifyWatcherCloseToEarthquake(earthquakeList, watcherList);
                 j++;
                 if (j < eTemp.size()) {
                     eTime = eTemp.get(j).getTime(); // Update eTime with the new value
                 }
             }
 
-            if (eTime - myTime >= 6) {
+            if (eTime - k >= 6) {
                 earthquakeList.remove(); // Remove the earthquake if it's been more than 6 hours
-
             }
 
+            // Potential thread sleep
             // Thread.sleep(1000); // Not currently active, potential thread sleep
-            myTime++; // Increment time
+            k++; // Increment time
         }
 
         // Clear the temporary lists
         eTemp.clear();
         wTemp.clear();
-
     }
 
-    // Method to read data from the watcher file
+    /**
+     * Method to read data from the watcher file and populate the temporary list.
+     */
     private static void readFromWatcher() {
         System.out.print("Please Enter the filepath for watcher: ");
         String filepath = sc.nextLine();
@@ -134,7 +150,9 @@ public class Console {
         }
     }
 
-    // Method to read data from the earthquake file
+    /**
+     * Method to read data from the earthquake file and populate the temporary list.
+     */
     private static void readFromEarthquake() {
         System.out.print("Please enter the filepath for earthquake: ");
         String filepath = sc.nextLine();
