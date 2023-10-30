@@ -76,14 +76,15 @@ public class Console {
                 System.out.println("Earthquake " + eTemp.get(eIth).getPlace() + " is inserted to earthquake-list");
 
                 // Notify watchers close to the earthquake
-                earthquakeList.notifyWatcherCloseToEarthquake(earthquakeList, watcherList);
+                earthquakeList.notifyWatcherCloseToEarthquake(eTemp.get(eIth), watcherList);
+
                 eIth++;
                 if (eIth < eTemp.size()) {
                     eTime = eTemp.get(eIth).getTime(); // Update eTime with the new value
                 }
             }
-            if (earthquakeList.first() != null) {
-                while (now - earthquakeList.first().getTime() > 6) {
+            if (earthquakeList.getFirstElement() != null) {
+                while (now - earthquakeList.getFirstElement().getTime() > 6) {
                     earthquakeList.remove(); // Remove the earthquake if it's been more than 6 hours
                     if (earthquakeList.length() == 0) {
                         break;
