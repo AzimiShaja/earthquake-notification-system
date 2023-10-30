@@ -48,25 +48,30 @@ public class Console {
         while (wIth < wTemp.size() || eIth < eTemp.size()) {
             // Process actions for Watchers
             while (now == wTime && wIth < wTemp.size()) {
-                if (wTemp.get(wIth).getCommand().equals("add")) {
-                    // Add watcher to the list
-                    watcherList.add(wTemp.get(wIth));
-                    System.out.println("\n" + wTemp.get(wIth).getName() + " is added to watcher-ist\n");
+                switch (wTemp.get(wIth).getCommand()) {
+                    case "add":
+                        // Add watcher to the list
+                        watcherList.add(wTemp.get(wIth));
+                        System.out.println("\n" + wTemp.get(wIth).getName() + " is added to watcher-list\n");
+                        break;
 
-                } else if (wTemp.get(wIth).getCommand().equals("delete")) {
-                    // Remove watcher from the list
-                    String name = wTemp.get(wIth).getName();
-                    watcherList.remove(name);
-                    System.out.println("\n" + name + " is deleted from watcher-list\n");
+                    case "delete":
+                        // Remove watcher from the list
+                        String name = wTemp.get(wIth).getName();
+                        watcherList.remove(name);
+                        System.out.println("\n" + name + " is deleted from watcher-list\n");
+                        break;
 
-                } else {
-                    // Process action when the command is neither 'add' nor 'delete'
-                    isQl = true;
+                    default:
+                        // Process query-largest when the command is neither 'add' nor 'delete'
+                        isQl = true;
+                        break;
                 }
                 wIth++;
                 if (wIth < wTemp.size()) {
                     wTime = wTemp.get(wIth).getTime(); // Update wTime with the new value
                 }
+
             }
 
             // Process Earthquake actions
@@ -83,6 +88,7 @@ public class Console {
                     eTime = eTemp.get(eIth).getTime(); // Update eTime with the new value
                 }
             }
+
             if (earthquakeList.getFirstElement() != null) {
                 while (now - earthquakeList.getFirstElement().getTime() > 6) {
                     earthquakeList.remove(); // Remove the earthquake if it's been more than 6 hours
@@ -94,7 +100,6 @@ public class Console {
 
             if (isQl) {
                 Earthquake largest = earthquakeList.getLargestEarthquake(); // Retrieve the largest earthquake
-
                 if (largest != null) {
                     // Display information about the largest earthquake in the past 6 hours
                     System.out.println("\nLargest earthquake in the past 6 hours:");
@@ -121,35 +126,38 @@ public class Console {
         String filepath = sc.nextLine();
         try {
             File file1 = new File(filepath);
+
             Scanner sc1 = new Scanner(file1);
 
             while (sc1.hasNextLine()) {
                 String wLine = sc1.nextLine();
                 String[] order = wLine.split(" ");
 
-                if (wLine.contains("add")) {
-                    // Add new watcher data
-                    int time = Integer.parseInt(order[0]);
-                    String command = order[1];
-                    Double latitude = Double.parseDouble(order[2]);
-                    Double longitude = Double.parseDouble(order[3]);
-                    String name = order[4];
+                switch (order[1]) {
+                    case "add":
+                        // Add new watcher data
+                        int time = Integer.parseInt(order[0]);
+                        String command = order[1];
+                        Double latitude = Double.parseDouble(order[2]);
+                        Double longitude = Double.parseDouble(order[3]);
+                        String name = order[4];
 
-                    wTemp.add(new Watcher(time, command, latitude, longitude, name));
+                        wTemp.add(new Watcher(time, command, latitude, longitude, name));
+                        break;
 
-                } else if (wLine.contains("delete")) {
-                    // Delete watcher data
-                    String name = order[2];
-                    int time = Integer.parseInt(order[0]);
-                    String command = order[1];
-                    wTemp.add(new Watcher(time, command, name));
+                    case "delete":
+                        name = order[2];
+                        time = Integer.parseInt(order[0]);
+                        command = order[1];
+                        wTemp.add(new Watcher(time, command, name));
+                        break;
 
-                } else {
-                    // Other watcher action
-                    int time = Integer.parseInt(order[0]);
-                    String command = order[1];
-
-                    wTemp.add(new Watcher(time, command));
+                    default:
+                        // add query-largest to temp arrayList
+                        time = Integer.parseInt(order[0]);
+                        command = order[1];
+                        wTemp.add(new Watcher(time, command));
+                        break;
                 }
             }
             sc1.close();

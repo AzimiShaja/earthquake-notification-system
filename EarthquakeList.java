@@ -85,6 +85,7 @@ public class EarthquakeList {
     }
 
     public void notifyWatcherCloseToEarthquake(Earthquake earthquake, WatcherList watchers) {
+
         WatcherList.Node wPointer = watchers.getHead(); // Get the first watcher node
 
         if (earthquake != null) { // Iterate through earthquakes and watchers
