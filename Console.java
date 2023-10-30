@@ -27,76 +27,84 @@ public class Console {
      * on input, and manages temporal time.
      *
      * @param args command-line arguments
-     * @throws InterruptedException if a thread is interrupted
      */
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         readFromWatcher(); // Reads data from watcher.txt
         readFromEarthquake(); // Reads data from earthquake.txt
 
-        // Current fictional time initialization
-        int j = 0;
-        int i = 0;
-        int k = 0;
+        int wIth = 0; // the ith element in the watcher list
+        int eIth = 0; // the jth element in the Earthquake list
 
-        int eTime = eTemp.get(j).getTime();
-        int wTime = wTemp.get(i).getTime();
+        // to make sure returns the most correct earthquake.
+        boolean isQl = false;
+        // Current fictional time initialization
+        int now = 0;
+
+        // earthquake and watcher timestamp
+        int eTime = eTemp.get(eIth).getTime();
+        int wTime = wTemp.get(wIth).getTime();
 
         // Loop until all data from Watchers or Earthquakes is processed
-        while (i < wTemp.size() || j < eTemp.size()) {
-            System.out.println("+=========== " + k + " ===========+");
-
+        while (wIth < wTemp.size() || eIth < eTemp.size()) {
             // Process actions for Watchers
-            while (k == wTime && i < wTemp.size()) {
-                if (wTemp.get(i).getCommand().equals("add")) {
+            while (now == wTime && wIth < wTemp.size()) {
+                if (wTemp.get(wIth).getCommand().equals("add")) {
                     // Add watcher to the list
-                    watcherList.add(wTemp.get(i));
-                    System.out.println(wTemp.get(i).getName() + " is added to watcher List\n");
+                    watcherList.add(wTemp.get(wIth));
+                    System.out.println("\n" + wTemp.get(wIth).getName() + " is added to watcher-ist\n");
 
-                } else if (wTemp.get(i).getCommand().equals("delete")) {
+                } else if (wTemp.get(wIth).getCommand().equals("delete")) {
                     // Remove watcher from the list
-                    String name = wTemp.get(i).getName();
+                    String name = wTemp.get(wIth).getName();
                     watcherList.remove(name);
-                    System.out.println(name + " is deleted from list\n");
+                    System.out.println("\n" + name + " is deleted from watcher-list\n");
 
                 } else {
                     // Process action when the command is neither 'add' nor 'delete'
-                    Earthquake largest = earthquakeList.getLargestEarthquake(); // Retrieve the largest earthquake
-
-                    if (largest != null) {
-                        // Display information about the largest earthquake in the past 6 hours
-                        System.out.println("Largest earthquake in the past 6 hours:");
-                        System.out.println("Magnitude " + largest.getMagnitude() + " at " + largest.getPlace() + "\n");
-                    } else {
-                        System.out.println("No record found \n"); // Display if no earthquake record is found
-                    }
+                    isQl = true;
                 }
-                i++;
-                if (i < wTemp.size()) {
-                    wTime = wTemp.get(i).getTime(); // Update wTime with the new value
+                wIth++;
+                if (wIth < wTemp.size()) {
+                    wTime = wTemp.get(wIth).getTime(); // Update wTime with the new value
                 }
             }
 
             // Process Earthquake actions
-            while (k == eTime && j < eTemp.size()) {
+            while (now == eTime && eIth < eTemp.size()) {
                 // Add earthquake to the list
-                earthquakeList.add(eTemp.get(j));
-                System.out.println("Earthquake " + eTemp.get(j).getPlace() + " is inserted to earthquake-list\n");
+                earthquakeList.add(eTemp.get(eIth));
+                System.out.println("Earthquake " + eTemp.get(eIth).getPlace() + " is inserted to earthquake-list");
 
                 // Notify watchers close to the earthquake
                 earthquakeList.notifyWatcherCloseToEarthquake(earthquakeList, watcherList);
-                j++;
-                if (j < eTemp.size()) {
-                    eTime = eTemp.get(j).getTime(); // Update eTime with the new value
+                eIth++;
+                if (eIth < eTemp.size()) {
+                    eTime = eTemp.get(eIth).getTime(); // Update eTime with the new value
+                }
+            }
+            if (earthquakeList.first() != null) {
+                while (now - earthquakeList.first().getTime() > 6) {
+                    earthquakeList.remove(); // Remove the earthquake if it's been more than 6 hours
+                    if (earthquakeList.length() == 0) {
+                        break;
+                    }
                 }
             }
 
-            if (eTime - k >= 6) {
-                earthquakeList.remove(); // Remove the earthquake if it's been more than 6 hours
+            if (isQl) {
+                Earthquake largest = earthquakeList.getLargestEarthquake(); // Retrieve the largest earthquake
+
+                if (largest != null) {
+                    // Display information about the largest earthquake in the past 6 hours
+                    System.out.println("\nLargest earthquake in the past 6 hours:");
+                    System.out.println("Magnitude " + largest.getMagnitude() + " at " + largest.getPlace() + "\n");
+                } else {
+                    System.out.println("No record found \n"); // Display if no earthquake record is found
+                }
+                isQl = false;
             }
 
-            // Potential thread sleep
-            // Thread.sleep(1000); // Not currently active, potential thread sleep
-            k++; // Increment time
+            now++; // Increment current time
         }
 
         // Clear the temporary lists
@@ -194,7 +202,6 @@ public class Console {
                     magnitude = "";
                 }
             }
-
             sc1.close();
         } catch (Exception e) {
             System.out.println(e.getMessage());
