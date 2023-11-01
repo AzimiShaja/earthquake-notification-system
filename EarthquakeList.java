@@ -84,38 +84,6 @@ public class EarthquakeList {
 
     }
 
-    public void notifyWatcherCloseToEarthquake(Earthquake earthquake, WatcherList watchers) {
-
-        WatcherList.Node wPointer = watchers.getHead(); // Get the first watcher node
-
-        if (earthquake != null) { // Iterate through earthquakes and watchers
-            while (wPointer != null) {
-                double watcherLatitude = wPointer.getData().getLatitude(); // Get watcher's latitude
-                double watcherLongitude = wPointer.getData().getLongitude(); // Get watcher's longitude
-
-                String[] coordinatesOrder = earthquake.getCoordinates().split(","); // Split earthquake
-                                                                                    // coordinates
-                double latitude = Double.parseDouble(coordinatesOrder[0]); // Get earthquake's latitude
-                double longitude = Double.parseDouble(coordinatesOrder[1]); // Get earthquake's longitude
-
-                // Calculate the distance between watcher and earthquake using the distance
-                // formula
-                double distance = Math
-                        .sqrt(Math.pow(latitude - watcherLatitude, 2) + Math.pow(longitude - watcherLongitude, 2));
-
-                // Check if the distance is less than 2 times the cube of earthquake magnitude
-                if (distance < 2 * (Math.pow(earthquake.getMagnitude(), 3))) {
-
-                    System.out.println(
-                            "Earthquake " + earthquake.getPlace() + " is close to " +
-                                    wPointer.getData().getName());
-
-                }
-                wPointer = wPointer.getNext(); // Move to the next watcher node
-            }
-        }
-    }
-
     public Earthquake getLargestEarthquake() {
         if (head == null) {
             return null; // Handle the case where the list is empty.

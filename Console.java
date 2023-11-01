@@ -81,7 +81,7 @@ public class Console {
                 System.out.println("Earthquake " + eTemp.get(eIth).getPlace() + " is inserted to earthquake-list");
 
                 // Notify watchers close to the earthquake
-                earthquakeList.notifyWatcherCloseToEarthquake(eTemp.get(eIth), watcherList);
+                watcherList.notifyWatcherCloseToEarthquake(eTemp.get(eIth));
 
                 eIth++;
                 if (eIth < eTemp.size()) {
