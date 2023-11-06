@@ -104,7 +104,7 @@ public class WatcherList {
 
     public void notifyWatcherCloseToEarthquake(Earthquake earthquake) {
 
-        Node wPointer = getHead(); // Get the first watcher node
+        Node wPointer = this.head; // Get the first watcher node
 
         if (earthquake != null) { // Iterate through earthquakes and watchers
             while (wPointer != null) {
@@ -129,7 +129,7 @@ public class WatcherList {
                                     wPointer.getData().getName());
 
                 }
-                wPointer = wPointer.getNext(); // Move to the next watcher node
+                wPointer = wPointer.next; // Move to the next watcher node
             }
         }
     }
